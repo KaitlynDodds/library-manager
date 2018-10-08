@@ -31,7 +31,9 @@ module.exports = (sequelize, DataTypes) => {
 			type: DataTypes.INTEGER,
 			len: [5]
 		}
-	}, {});
+	}, {
+		timestamps: false
+	});
 
 	Patron.associate = function(models) {
 		// associations can be defined here

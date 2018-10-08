@@ -1,10 +1,20 @@
 var express = require('express');
 var router = express.Router();
 
+// models
+const Book = require('../models').Book;
+
 /* GET All BOOKS page. */
 router.get('/', function(req, res, next) {
     // TODO: Filter by 'all', checked out', 'overdue'
-  res.render('books', { title: 'Books' });
+    Book.findAll()
+        .then((books) => {
+            if (books) {
+                res.render('books', { books, title: 'Books' });
+            } else {
+                res.send(404);
+            }
+        });
 });
 
 /* GET Book Detail page (form) */
