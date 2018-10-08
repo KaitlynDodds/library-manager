@@ -22,8 +22,8 @@ router.get('/new', function(req, res, next) {
     res.render('index', { title: 'New Book Page' });
 });
 
-/* PUSH Create New Book */
-router.push('/', function(req, res, next) {
+/* POST Create New Book */
+router.post('/', function(req, res, next) {
     // CREATE new book in db
 });
 

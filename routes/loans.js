@@ -12,8 +12,8 @@ router.get('/new', function(req, res, next) {
   res.render('index', { title: 'New Loan' });
 });
 
-/* PUSH New Loan */
-router.push('/', function(req, res, next) {
+/* POST New Loan */
+router.post('/', function(req, res, next) {
     // CREATE new loan in db
 });
 

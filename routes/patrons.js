@@ -21,8 +21,8 @@ router.get('/new', function(req, res, next) {
     res.render('index', { title: 'New Patron Page' });
 });
 
-/* PUSH Create New Patron */
-router.push('/', function(req, res, next) {
+/* POST Create New Patron */
+router.post('/', function(req, res, next) {
     // CREATE new patron in db
 });
 
