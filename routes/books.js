@@ -8,12 +8,12 @@ router.get('/', function(req, res, next) {
 });
 
 /* GET Book Detail page (form) */
-router.get('/:id', function(req, res, next) {
+router.get('/:id/detail', function(req, res, next) {
     res.render('index', { title: 'Book Detail Page' });
 });
 
 /* PUT Edit Book */
-router.put('/:id/edit', function(req, res, next) {
+router.put('/:id', function(req, res, next) {
     // Edit book in db
 });
   
@@ -28,12 +28,12 @@ router.push('/', function(req, res, next) {
 });
 
 /* GET Return Book page (form) */
-router.get('/return', function(req, res, next) {
+router.get('/:id/return', function(req, res, next) {
     res.render('index', { title: 'Return Book Page' });
 });
 
 /* PUT Update Book */
-router.put('/', function(req, res, next) {
+router.put('/id', function(req, res, next) {
     // UPDATE book in db
 });
 
