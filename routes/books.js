@@ -4,7 +4,7 @@ var router = express.Router();
 /* GET All BOOKS page. */
 router.get('/', function(req, res, next) {
     // TODO: Filter by 'all', checked out', 'overdue'
-  res.render('index', { title: 'All Books' });
+  res.render('books', { title: 'Books' });
 });
 
 /* GET Book Detail page (form) */
