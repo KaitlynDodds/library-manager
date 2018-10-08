@@ -9,7 +9,7 @@ router.get('/', function(req, res, next) {
 
 /* GET Book Detail page (form) */
 router.get('/:id/detail', function(req, res, next) {
-    res.render('book_details', { title: 'Book Detail Page' });
+    res.render('book_detail', { title: 'Book Detail Page' });
 });
 
 /* PUT Edit Book */
