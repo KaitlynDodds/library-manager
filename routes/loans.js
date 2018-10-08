@@ -4,12 +4,12 @@ var router = express.Router();
 /* GET All LOANS page. */
 router.get('/', function(req, res, next) {
     // TODO: filter by 'all', 'overdue', 'checked out'
-  res.render('index', { title: 'All Loans' });
+  res.render('loans', { title: 'Loans' });
 });
 
 /* GET New Loan page (form) */
 router.get('/new', function(req, res, next) {
-  res.render('index', { title: 'New Loan' });
+  res.render('loan_new', { title: 'New Loan' });
 });
 
 /* POST New Loan */
