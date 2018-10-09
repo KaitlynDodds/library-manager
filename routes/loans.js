@@ -16,6 +16,11 @@ router.get('/', function(req, res, next) {
 	const filter = req.query.filter;
 	// default query 
 	let query = Query.selectAllLoans;
+	if (filter === 'overdue') {
+		query = Query.selectOverdueLoans;
+	} else if (filter === 'checked_out') {
+		query = Query.selectCheckedOutLoans;
+	}
 	
 	Loan.findAll(query)
 		.then((loans) => {
