@@ -92,3 +92,9 @@ input {
 input[type=text], select {
   margin-left: 10px;
 }
+
+/* Custom Styles */
+
+a.active {
+  text-decoration: underline;
+}

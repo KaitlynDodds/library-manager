@@ -3,14 +3,15 @@ extends layout.pug
 block content 
     h1= title
     p
-        a.button(href='new_book.html') Create New Book
+        a.button(href='/books/new') Create New Book
     p
         | Filters 
-        a(href='all_books.html') All
+        
+        a(href='/books?filter=all' class=filter === 'all' ? "active" : "") All
         |  
-        a(href='overdue_books.html') Overdue
+        a(href='/books?filter=overdue' class=filter === 'overdue' ? "active" : "") Overdue
         |  
-        a(href='checked_books.html') Checked Out
+        a(href='/books?filter=checked_out' class=filter === 'checked_out' ? "active" : "") Checked Out
     table
         thead
             tr
@@ -22,7 +23,7 @@ block content
             each book in books
                 tr
                     td
-                        a(href='book_detail.html') #{book.title}
+                        a(href=`/books/${book.id}/detail`) #{book.title}
                     td= book.author
                     td= book.genre
                     td= book.first_published
