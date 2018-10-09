@@ -80,6 +80,7 @@ selectBookById = function(given_id) {
                         model: Patron
                     }
                 ],
+                // if loans don't exist for book, still return book
                 required: false
             }
         ]
