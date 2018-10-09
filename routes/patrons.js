@@ -4,6 +4,9 @@ var router = express.Router();
 // models
 const Patron        = require('../models').Patron;
 
+// queries
+const Query 		= require('../queries/patrons');
+
 /* GET All PATRONS page. */
 router.get('/', function(req, res, next) {
 	Patron.findAll()
@@ -21,7 +24,21 @@ router.get('/', function(req, res, next) {
 
 /* GET Patron Detail page (form) */
 router.get('/:id/detail', function(req, res, next) {
-	res.render('patron_detail', { title: 'Patron: {Patron Name}' });
+	const patron_id = req.params.id;
+	let query = Query.selectPatronById(patron_id);
+
+	Patron.findOne(query)
+		.then(patron => {
+			if (patron) {
+				console.log(patron);
+				res.render('patron_detail', { 
+					patron,
+					title: `Patron: ${patron.first_name} ${patron.last_name}`
+				});
+			} else {
+				res.sendStatus(404);
+			}
+		});
 });
 
 /* PUT Update Patron */
