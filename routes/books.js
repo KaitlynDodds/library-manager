@@ -1,65 +1,35 @@
-var express = require('express');
-var router = express.Router();
-const Sequelize = require('sequelize');
-const Op = Sequelize.Op;
+var express         = require('express');
+var router          = express.Router();
+const Sequelize     = require('sequelize');
+const Op            = Sequelize.Op;
 
 // models
 const Book = require('../models').Book;
 const Loan = require('../models').Loan;
 
-function getCheckedOutBooksQuery() {
-    return {
-        attributes: ['title', 'author', 'genre', 'first_published', 'id'],
-        include: [{
-            model: Loan,
-            where: { 
-                book_id: Sequelize.col('book.id'),
-                // book has not been returned yet 
-                returned_on: {
-                    [Op.eq]: null
-                }
-            },
-            attributes: [['id', 'loan_id']]
-        }]
-    }
-}
-
-function getOverdueBooksQuery() {
-    return {
-        attributes: ['title', 'author', 'genre', 'first_published', 'id'],
-        include: [{
-            model: Loan,
-            where: { 
-                book_id: Sequelize.col('book.id'),
-                // less than today's date
-                return_by: {
-                    [Op.lt]: new Date() 
-                },
-                // returned_on is null (book has not been returned)
-                returned_on: {
-                    [Op.eq]: null
-                }
-            },
-            attributes: [['id', 'loan_id']]
-        }]
-    }
-}
+// queries 
+const Query = require('../queries/books');
 
 /* GET All BOOKS page. */
 router.get('/', function(req, res, next) {
+    const filter = req.query.filter;
     // default query (get all books)
     let query = {};
 
-    if (req.query.filter === 'checked_out') {
-        query = getCheckedOutBooksQuery();
-    } else if (req.query.filter === 'overdue') {
-        query = getOverdueBooksQuery();
+    if (filter === 'checked_out') {
+        query = Query.selectCheckedOutBooks;
+    } else if (filter === 'overdue') {
+        query = Query.selectOverdueBooks;
     }   
 
     Book.findAll(query)
         .then((books) => {
             if (books) {
-                res.render('books', { books, title: 'Books', filter: req.query.filter });
+                res.render('books', { 
+                    books, 
+                    title: 'Books', 
+                    filter: filter 
+                });
             } else {
                 res.send(404);
             }

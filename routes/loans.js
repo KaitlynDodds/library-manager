@@ -1,38 +1,21 @@
-var express = require('express');
-var router = express.Router();
-const Sequelize = require('sequelize');
-const Op = Sequelize.Op;
+var express 		= require('express');
+var router 			= express.Router();
+const Sequelize 	= require('sequelize');
+const Op 			= Sequelize.Op;
 
 // models
-const Loan = require('../models').Loan;
-const Book = require('../models').Book;
-const Patron = require('../models').Patron;
+const Loan 		= require('../models').Loan;
+const Book 		= require('../models').Book;
+const Patron 	= require('../models').Patron;
 
-function selectAllLoansQuery() {
-	return {
-		include: [
-			{
-				model: Book,
-				attributes: ['title'],
-				where: {
-					id: Sequelize.col('loan.book_id')
-				}
-			},
-			{
-				model: Patron,
-				attributes: ['first_name', 'last_name'],
-				where: {
-					id: Sequelize.col('loan.patron_id')
-				}
-			}
-		],
-	};
-}
+// Queries
+const Query 	= require('../queries/loans');
 
 /* GET All LOANS page. */
 router.get('/', function(req, res, next) {
+	const filter = req.query.filter;
 	// default query 
-	let query = selectAllLoansQuery();
+	let query = Query.selectAllLoans;
 	
 	Loan.findAll(query)
 		.then((loans) => {
@@ -40,7 +23,7 @@ router.get('/', function(req, res, next) {
 				res.render('loans', { 
 					loans, 
 					title: 'Loans', 
-					filter: req.query.filter 
+					filter: filter 
 				});
 			} else {
 				send(404);
