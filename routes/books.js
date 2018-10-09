@@ -31,14 +31,27 @@ router.get('/', function(req, res, next) {
                     filter: filter 
                 });
             } else {
-                res.send(404);
+                res.sendStatus(404);
             }
         });
 });
 
 /* GET Book Detail page (form) */
 router.get('/:id/detail', function(req, res, next) {
-    res.render('book_detail', { title: 'Book Detail Page' });
+    let book_id = req.params.id; 
+    let query = Query.selectBookById(book_id);
+
+    Book.findOne(query)
+        .then(book => {
+            if (book) {
+                res.render('book_detail', { 
+                    book,
+                    title: 'Book Detail Page' 
+                });
+            } else {
+                res.sendStatus(404);
+            }
+        })
 });
 
 /* PUT Edit Book */

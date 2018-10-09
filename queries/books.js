@@ -2,8 +2,9 @@ const Sequelize         = require('sequelize');
 const Op                = Sequelize.Op;
 
 // models
-const Book = require('../models').Book;
-const Loan = require('../models').Loan;
+const Book          = require('../models').Book;
+const Loan          = require('../models').Loan;
+const Patron        = require('../models').Patron;
 
 selectCheckedOutBooks = {
     attributes: [
@@ -55,7 +56,38 @@ selectOverdueBooks = {
     }]
 }
 
+selectBookById = function(given_id) {
+    return {
+        where: {
+            id: {
+                [Op.eq]: given_id
+            }
+        },
+        include: [
+            {
+                model: Loan,
+                where: { 
+                    book_id: Sequelize.col('book.id'),
+                },
+                attributes: [
+                    ['id', 'loan_id'],
+                    'loaned_on',
+                    'return_by',
+                    'returned_on'
+                ],
+                include: [
+                    { 
+                        model: Patron
+                    }
+                ],
+                required: false
+            }
+        ]
+    };
+}
+
 module.exports = {
     selectCheckedOutBooks: selectCheckedOutBooks,
-    selectOverdueBooks: selectOverdueBooks
+    selectOverdueBooks: selectOverdueBooks,
+    selectBookById: selectBookById
 };
