@@ -16,7 +16,7 @@ module.exports = (sequelize, DataTypes) => {
 		loaned_on: { 
 			type: DataTypes.DATE
 		},
-		returned_by: { 
+		return_by: { 
 			type: DataTypes.DATE
 		},
 		returned_on: { 
