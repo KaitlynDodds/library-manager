@@ -8,19 +8,41 @@ module.exports = (sequelize, DataTypes) => {
 			autoIncrement: true
 		},
 		book_id: {
-			type: DataTypes.UUID
+			type: DataTypes.INTEGER,
+			validate: {           
+				isInt: {
+					msg: "You must select a book"
+				}          
+			}
 		},
 		patron_id: {
-			type: DataTypes.UUID
+			type: DataTypes.INTEGER,
+			validate: {           
+				isInt: {
+					msg: "You must select a patron"
+				}          
+			}
 		},
 		loaned_on: { 
-			type: DataTypes.DATE
+			type: DataTypes.DATEONLY,
+			validate: {
+				isDate: {
+					msg: "Please provide a loaned on date"
+				}
+			}
 		},
 		return_by: { 
-			type: DataTypes.DATE
+			type: DataTypes.DATEONLY,
+			validate: {
+				isDate: {
+					msg: "Please provide a return by date"
+				}
+			}
 		},
 		returned_on: { 
-			type: DataTypes.DATE
+			type: DataTypes.DATEONLY,
+			allowNull: true,
+			defaultValue: null,
 		},
 	}, {
 		timestamps: false

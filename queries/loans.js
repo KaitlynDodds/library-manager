@@ -25,6 +25,17 @@ selectAllLoans = {
     ],
 }
 
+selectAllLoansAndPatronsAndBooks = {
+    include: [
+        {
+            model: Book
+        },
+        {
+            model: Patron
+        }
+    ],
+}
+
 selectOverdueLoans = {
     where: {
         // less than today's date
@@ -82,5 +93,6 @@ selectCheckedOutLoans = {
 module.exports = {
     selectAllLoans: selectAllLoans,
     selectOverdueLoans: selectOverdueLoans,
-    selectCheckedOutLoans: selectCheckedOutLoans
+    selectCheckedOutLoans: selectCheckedOutLoans,
+    selectAllLoansAndPatronsAndBooks: selectAllLoansAndPatronsAndBooks
 }

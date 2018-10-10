@@ -38,12 +38,69 @@ router.get('/', function(req, res, next) {
 
 /* GET New Loan page (form) */
 router.get('/new', function(req, res, next) {
-	res.render('loan_new', { title: 'New Loan' });
+	let loaned_on = new Date(); // get today's date
+	
+	let return_by = new Date();
+	return_by.setDate(return_by.getDate() + 7); // get date 7 days from today
+
+	const data = {};
+
+	Book.findAll()
+		.then(books => {
+			data.books = books;
+			return Patron.findAll();
+		})
+		.then(patrons => {
+			data.patrons = patrons;
+			res.render('loan_new', {
+				data: data,
+				loan: Loan.build({
+					loaned_on: loaned_on, 
+					return_by: return_by,
+				}),
+				title: 'New Loan' 
+			});
+		}).catch(err => {
+			throw err;
+		});
 });
 
 /* POST New Loan */
 router.post('/', function(req, res, next) {
-		// CREATE new loan in db
+	// CREATE new loan in db
+	Loan.create(req.body)
+		.then(loan => {
+			if (loan) {
+                res.redirect(`/loans`);
+            } else {
+                res.sendStatus(500);
+            }
+		})
+		.catch(err => {
+			if(err.name === "SequelizeValidationError") {
+				data = {};
+				Book.findAll()
+					.then(books => {
+						data.books = books;
+						return Patron.findAll();
+					})
+					.then(patrons => {
+						data.patrons = patrons;
+						res.render("loan_new", {
+							loan: Loan.build(req.body),
+							data: data,
+							title: "New Loan", 
+							errors: err.errors
+						});
+					}).catch(err => {
+						throw err;
+					});
+            } else {
+                throw err;
+            }
+		}).catch(err => {
+			res.sendStatus(500);
+		});
 });
 
 module.exports = router;

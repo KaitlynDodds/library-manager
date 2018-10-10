@@ -75,7 +75,7 @@ module.exports = (sequelize, DataTypes) => {
 
 	// instance level methods 
 	Patron.prototype.getFullname = function() {
-		return [this.firstname, this.lastname].join(' ');
+		return [this.first_name, this.last_name].join(' ');
 	};
 
 	return Patron;
