@@ -87,37 +87,8 @@ selectBookById = function(given_id) {
     };
 }
 
-selectBookWhereLoanID = function(book_id, loan_id) {
-    return {
-        where: {
-            id: {
-                [Op.eq]: book_id
-            }
-        },
-        include: [
-            {
-                model: Loan,
-                where: { 
-                    id: {
-                        [Op.eq]: loan_id
-                    }
-                },
-                include: [
-                    { 
-                        model: Patron
-                    }
-                ],
-                // if loans don't exist for book, still return book
-                required: false
-            }
-        ],
-        limit: 1
-    };
-}
-
 module.exports = {
     selectCheckedOutBooks: selectCheckedOutBooks,
     selectOverdueBooks: selectOverdueBooks,
-    selectBookById: selectBookById,
-    selectBookWhereLoanID: selectBookWhereLoanID
+    selectBookById: selectBookById
 };

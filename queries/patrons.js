@@ -16,12 +16,6 @@ selectPatronById = function(given_id) {
         include: [
             {
                 model: Loan,
-                attributes: [
-                    ['id', 'loan_id'],
-                    'loaned_on',
-                    'return_by',
-                    'returned_on'
-                ],
                 where: { 
                     patron_id: Sequelize.col('patron.id'),
                 },

@@ -103,27 +103,81 @@ router.post('/', function(req, res, next) {
 		});
 });
 
-router.put('/:id', function(req, res, next) { 
-	Loan.findById(req.params.id)
+/* GET Return Book page (form) */
+router.get('/:loan_id/book/:book_id/return', function(req, res, next) {
+	const query = Query.selectLoanById(req.params.loan_id);
+	
+	Loan.findOne(query)
 		.then(loan => {
-			return loan.update(req.body);
-		})
-		.then(loan => {
-			res.redirect(`/loans`);
-		})
-		.catch(err => {
-			if(err.name === "SequelizeValidationError") {
-				res.render("book_return", {
-					title: "Return Book", 
-					errors: err.errors
+			if (loan) {
+				res.render('book_return', { 
+					loan: loan,
+					r_loan: Loan.build({
+						returned_on: new Date()
+					}),
+					title: 'Patron: Return Book' 
 				});
 			} else {
-			throw err;
+				res.sendStatus(404);
 			}
-		})
-		.catch(err => {
-			res.send(500);
-		});;
+		});
+});
+
+router.put('/:loan_id/return', function(req, res, next) { 
+	const query = Query.selectLoanById(req.params.loan_id);
+
+	// check that returned_on value is valid 
+	if (!req.body.returned_on 
+		|| req.body.returned_on.length === 0) {
+			// if not, reload book_return with errors
+			Loan.findOne(query)
+				.then(loan => {
+					res.render('book_return', { 
+						loan: loan,
+						r_loan: Loan.build({
+							returned_on: new Date()
+						}),
+						title: 'Patron: Return Book',
+						errors: [
+							{
+								message: "Please provide valid 'returned on' date"
+							}
+						]
+					});
+				})
+				.catch(err => {
+					res.send(500);
+				});
+	} else {
+		// else, update loan in db
+		Loan.findOne(query)
+			.then(loan => {
+				return loan.update(req.body);
+			})
+			.then(loan => {
+				res.redirect(`/loans`);
+			})
+			.catch(err => {
+				if(err.name === "SequelizeValidationError") {
+					Loan.findOne(query)
+						.then(loan => {
+							res.render('book_return', { 
+								loan: loan,
+								r_loan: Loan.build({
+									returned_on: new Date()
+								}),
+								title: 'Patron: Return Book',
+								errors: err.errors
+							});
+						})
+				} else {
+					throw err;
+				}
+			})
+			.catch(err => {
+				res.send(500);
+			});;
+	}
 });
 
 module.exports = router;

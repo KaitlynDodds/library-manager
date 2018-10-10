@@ -90,9 +90,28 @@ selectCheckedOutLoans = {
     ],
 }
 
+selectLoanById = function(loan_id) {
+    return {
+        where: {
+            id: {
+                [Op.eq]: loan_id
+            }
+        },
+        include: [
+            {
+                model: Book,
+            },
+            {
+                model: Patron
+            }
+        ]
+    };
+}
+
 module.exports = {
     selectAllLoans: selectAllLoans,
     selectOverdueLoans: selectOverdueLoans,
     selectCheckedOutLoans: selectCheckedOutLoans,
-    selectAllLoansAndPatronsAndBooks: selectAllLoansAndPatronsAndBooks
+    selectAllLoansAndPatronsAndBooks: selectAllLoansAndPatronsAndBooks,
+    selectLoanById: selectLoanById
 }

@@ -2,23 +2,26 @@ extends layout.pug
 
 block content
     h1= title
+
+    include partials/errors.pug
+
     p
         strong Book Title: 
-        | #{book.title}
+        | #{loan.Book.title}
     p
         strong Loaned By: 
-        | #{book.Loans[0].Patron.getFullname()}
+        | #{loan.Patron.getFullname()}
     p
         strong Loaned On: 
-        | #{book.Loans[0].loaned_on}
+        | #{loan.loaned_on}
     p
         strong Return By: 
-        | #{book.Loans[0].return_by}
+        | #{loan.return_by}
     form(
-        action=`/loans/${book.Loans[0].id}?_method=PUT` method="POST"
+        action=`/loans/${loan.id}/return?_method=PUT` method="POST"
     )
         p
             label(for='returned_on') Returned on:
-            input#returned_on(type='text', value=loan.returned_on name='returned_on')
+            input#returned_on(type='text', value=r_loan.returned_on name='returned_on')
         p
             input(type='submit', value='Return Book')
