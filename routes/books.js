@@ -61,12 +61,31 @@ router.put('/:id', function(req, res, next) {
   
 /* GET New Book page (form) */
 router.get('/new', function(req, res, next) {
-    res.render('book_new', { title: 'New Book' });
+    res.render('book_new', { book: Book.build(), title: 'New Book' });
 });
 
 /* POST Create New Book */
 router.post('/', function(req, res, next) {
     // CREATE new book in db
+    Book.create(req.body)
+        .then(book => {
+            if (book) {
+                res.redirect(`/books/${book.id}/detail`);
+            } else {
+                res.sendStatus(500);
+            }
+        })
+        .catch(err => {
+            if(err.name === "SequelizeValidationError") {
+                res.render("book_new", {
+                  book: Book.build(req.body), 
+                  title: "New Book", 
+                  errors: err.errors
+                });
+            } else {
+                throw err;
+            }
+        });
 });
 
 /* GET Return Book page (form) */

@@ -3,9 +3,9 @@
 module.exports = (sequelize, DataTypes) => {
 	const Patron = sequelize.define('Patron', {
 		id: {
-			type: DataTypes.UUID,
+			type: DataTypes.INTEGER,
 			primaryKey: true,
-			defaultValue: DataTypes.UUIDV4
+			autoIncrement: true
 		},
 		first_name: {
 			type: DataTypes.STRING,

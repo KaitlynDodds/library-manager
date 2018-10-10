@@ -3,25 +3,45 @@
 module.exports = (sequelize, DataTypes) => {
 	const Book = sequelize.define('Book', {
 		id: {
-			type: DataTypes.UUID,
+			type: DataTypes.INTEGER,
 			primaryKey: true,
-			defaultValue: DataTypes.UUIDV4
+			autoIncrement: true
 		},
 		title: {
 			type: DataTypes.STRING,
-			required: true
+			validate: {           
+				notEmpty: {   // don't allow empty strings
+					msg: "Title is required"
+				},           
+			}
 		},
 		author: {
 			type: DataTypes.STRING,
-			required: true
+			validate: {           
+				notEmpty: {   // don't allow empty strings
+					msg: "Author is required"
+				},           
+			}
 		},
 		genre: {
 			type: DataTypes.STRING,
-			required: true
+			validate: {           
+				notEmpty: {   // don't allow empty strings
+					msg: "Genre is required"
+				},           
+			}
 		},
 		first_published: { 
 			type: DataTypes.INTEGER,
-			len: [4]
+			validate: {           
+				notEmpty: {   // don't allow empty strings
+					msg: "Year published is required"
+				},       
+				len: {
+					args: [4],
+					msg: "Year published is required"
+				}    
+			}
 		}
 	}, {
 		timestamps: false
