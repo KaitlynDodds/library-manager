@@ -78,9 +78,9 @@ router.post('/', function(req, res, next) {
         .catch(err => {
             if(err.name === "SequelizeValidationError") {
                 res.render("book_new", {
-                  book: Book.build(req.body), 
-                  title: "New Book", 
-                  errors: err.errors
+                    book: Book.build(req.body), 
+                    title: "New Book", 
+                    errors: err.errors
                 });
             } else {
                 throw err;

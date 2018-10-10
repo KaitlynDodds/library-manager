@@ -30,7 +30,6 @@ router.get('/:id/detail', function(req, res, next) {
 	Patron.findOne(query)
 		.then(patron => {
 			if (patron) {
-				console.log(patron);
 				res.render('patron_detail', { 
 					patron,
 					title: `Patron: ${patron.first_name} ${patron.last_name}`
@@ -48,12 +47,31 @@ router.put('/:id', function(req, res, next) {
 
 /* GET New Patron page (form) */
 router.get('/new', function(req, res, next) {
-	res.render('patron_new', { title: 'New Patron' });
+	res.render('patron_new', { patron: Patron.build(), title: 'New Patron' });
 });
 
 /* POST Create New Patron */
 router.post('/', function(req, res, next) {
 	// CREATE new patron in db
+	Patron.create(req.body)
+		.then(patron => {
+			if (patron) {
+				res.redirect(`/patrons/${patron.id}/detail`);
+			} else {
+				res.sendStatus(500);
+			}
+		})
+		.catch(err => {
+			if(err.name === "SequelizeValidationError") {
+                res.render("patron_new", {
+					patron: Patron.build(req.body), 
+					title: "New Patron", 
+					errors: err.errors
+                });
+            } else {
+                throw err;
+            }
+		});
 });
 
 module.exports = router;
