@@ -89,13 +89,23 @@ router.post('/', function(req, res, next) {
 });
 
 /* GET Return Book page (form) */
-router.get('/:id/return', function(req, res, next) {
-    res.render('book_return', { title: 'Patron: Return Book' });
-});
+router.get('/:book_id/return/:loan_id', function(req, res, next) {
+    const query = Query.selectBookWhereLoanID(req.params.book_id, req.params.loan_id);
 
-/* PUT Update Book */
-router.put('/id', function(req, res, next) {
-    // UPDATE book in db
+    Book.findOne(query)
+        .then(book => {
+            if (book) {
+                res.render('book_return', { 
+                    book,
+                    loan: Loan.build({
+                        returned_on: new Date()
+                    }),
+                    title: 'Patron: Return Book' 
+                });
+            } else {
+                res.sendStatus(404);
+            }
+        });
 });
 
 module.exports = router;

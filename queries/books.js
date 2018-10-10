@@ -70,7 +70,7 @@ selectBookById = function(given_id) {
                     book_id: Sequelize.col('book.id'),
                 },
                 attributes: [
-                    ['id', 'loan_id'],
+                    'id',
                     'loaned_on',
                     'return_by',
                     'returned_on'
@@ -87,8 +87,37 @@ selectBookById = function(given_id) {
     };
 }
 
+selectBookWhereLoanID = function(book_id, loan_id) {
+    return {
+        where: {
+            id: {
+                [Op.eq]: book_id
+            }
+        },
+        include: [
+            {
+                model: Loan,
+                where: { 
+                    id: {
+                        [Op.eq]: loan_id
+                    }
+                },
+                include: [
+                    { 
+                        model: Patron
+                    }
+                ],
+                // if loans don't exist for book, still return book
+                required: false
+            }
+        ],
+        limit: 1
+    };
+}
+
 module.exports = {
     selectCheckedOutBooks: selectCheckedOutBooks,
     selectOverdueBooks: selectOverdueBooks,
-    selectBookById: selectBookById
+    selectBookById: selectBookById,
+    selectBookWhereLoanID: selectBookWhereLoanID
 };

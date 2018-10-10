@@ -103,4 +103,27 @@ router.post('/', function(req, res, next) {
 		});
 });
 
+router.put('/:id', function(req, res, next) { 
+	Loan.findById(req.params.id)
+		.then(loan => {
+			return loan.update(req.body);
+		})
+		.then(loan => {
+			res.redirect(`/loans`);
+		})
+		.catch(err => {
+			if(err.name === "SequelizeValidationError") {
+				res.render("book_return", {
+					title: "Return Book", 
+					errors: err.errors
+				});
+			} else {
+			throw err;
+			}
+		})
+		.catch(err => {
+			res.send(500);
+		});;
+});
+
 module.exports = router;
