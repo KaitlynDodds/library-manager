@@ -46,6 +46,7 @@ router.get('/:id/detail', function(req, res, next) {
             if (book) {
                 res.render('book_detail', { 
                     book,
+                    loans: book.Loans,
                     title: 'Book Detail Page' 
                 });
             } else {
@@ -56,7 +57,40 @@ router.get('/:id/detail', function(req, res, next) {
 
 /* PUT Edit Book */
 router.put('/:id', function(req, res, next) {
-    // Edit book in db
+
+    Book.findById(req.params.id)
+        .then(book => {
+            if (book) {
+                return book.update(req.body);
+            } else {
+                res.sendStatus(404);
+            }
+        })
+        .then(book => {
+            res.redirect('/books');
+        })
+        .catch(err => {
+            if(err.name === "SequelizeValidationError") {
+                let query = Query.selectBookById(req.params.id);
+
+                Book.findOne(query)
+                    .then(book => {
+                        if (book) {
+                            res.render("book_detail", {
+                                // keeps changes made to fields by user
+                                book: Object.assign(book, req.body), 
+                                loans: book.Loans,
+                                title: "Book Detail Page", 
+                                errors: err.errors
+                            });
+                        } else {
+                            res.sendStatus(404);
+                        }
+                    });
+            } else {
+                throw err;
+            }
+        });
 });
   
 /* GET New Book page (form) */

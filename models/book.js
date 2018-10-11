@@ -39,7 +39,7 @@ module.exports = (sequelize, DataTypes) => {
 				},       
 				len: {
 					args: [4],
-					msg: "Year published is required"
+					msg: "Year published must be 4 digits"
 				}    
 			}
 		}
