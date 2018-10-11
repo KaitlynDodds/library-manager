@@ -98,3 +98,12 @@ input[type=text], select {
 a.active {
   text-decoration: underline;
 }
+
+.errors {
+  color: rgb(253, 66, 33);
+  list-style-type: circle;
+}
+
+.errors li {
+  margin-left: 40px;
+}
