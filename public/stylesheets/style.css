@@ -128,3 +128,7 @@ a.active {
 .pagination li a {
   color: #019875;
 }
+
+.pagination li a:hover {
+  color: #000;
+}

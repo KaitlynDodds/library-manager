@@ -9,11 +9,19 @@ const Query 		= require('../queries/patrons');
 
 /* GET All PATRONS page. */
 router.get('/', function(req, res, next) {
-	Patron.findAll()
-		.then((patrons) => {
-			if (patrons) {
+	const LIMIT = 10;
+	// page to display
+    const p = parseInt(req.query.p || 1);
+    // calc offset based on page
+    const offset = (p - 1 > 0 ? p - 1 : 0) * 10;
+
+	Patron.findAndCountAll({ limit: LIMIT, offset: offset })
+		.then((results) => {
+			if (results) {
 				res.render('patrons', { 
-					patrons,
+					current_page: p,
+                    patrons: results.rows, 
+                    pages: Math.ceil(results.count / LIMIT),
 					title: 'Patrons'
 				});
 			} else {

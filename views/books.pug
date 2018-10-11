@@ -36,7 +36,7 @@ block content
             - let n = 1
             while n <= pages
                 li 
-                    a(href=`/books?filter=${filter || 'all'}&p=${n}`) #{n}
+                    a(href=`/books?filter=${filter || 'all'}&p=${n}` class=n === current_page ? "active" : "") #{n}
                     - n++
             if current_page < pages
                 li 
