@@ -32,7 +32,7 @@ router.get('/:id/detail', function(req, res, next) {
 			if (patron) {
 				res.render('patron_detail', { 
 					patron,
-					title: `Patron: ${patron.first_name} ${patron.last_name}`
+					title: `Patron: ${patron.getFullname()}`
 				});
 			} else {
 				res.sendStatus(404);
@@ -43,6 +43,37 @@ router.get('/:id/detail', function(req, res, next) {
 /* PUT Update Patron */
 router.put('/:id', function(req, res, next) {
 	// UPDATE patron in db
+	Patron.findById(req.params.id)
+		.then(patron => {
+			if (patron) {
+				return patron.update(req.body);
+			} else {
+				res.sendStatus(404);
+			}
+		})
+		.then(patron => {
+			res.redirect('/patrons');
+		})
+		.catch(err => {
+			if(err.name === "SequelizeValidationError") {
+                let query = Query.selectPatronById(req.params.id);
+				Patron.findOne(query)
+                    .then(patron => {
+                        if (patron) {
+                            res.render("patron_detail", {
+                                // keeps changes made to fields by user
+                                patron: Object.assign(patron, req.body), 
+                                title: `Patron: ${patron.getFullname()}`, 
+                                errors: err.errors
+                            });
+                        } else {
+                            res.sendStatus(404);
+                        }
+                    });
+            } else {
+                throw err;
+            }
+		});
 });
 
 /* GET New Patron page (form) */
