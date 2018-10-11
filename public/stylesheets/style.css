@@ -107,3 +107,24 @@ a.active {
 .errors li {
   margin-left: 40px;
 }
+
+.pagination {
+  display: inline-block;
+  margin: 20px 0 0 0;
+  list-style: none;
+  border-radius: 2px;
+  border: solid 1px #019875;
+}
+
+.pagination li {
+  color: #019875;
+  display: inline-block;
+  border: solid 1px #019875;
+  line-height: 30px;
+  text-align: center;
+  width: 30px;
+}
+
+.pagination li a {
+  color: #019875;
+}

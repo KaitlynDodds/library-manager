@@ -27,3 +27,18 @@ block content
                     td= book.author
                     td= book.genre
                     td= book.first_published
+
+    if pages > 1
+        ul.pagination
+            if current_page > 1
+                li 
+                    a(href=`/books?filter=${filter || 'all'}&p=${current_page - 1 < 1 ? 1 : current_page - 1}`) &laquo;
+            - let n = 1
+            while n <= pages
+                li 
+                    a(href=`/books?filter=${filter || 'all'}&p=${n}`) #{n}
+                    - n++
+            if current_page < pages
+                li 
+                    a(href=`/books?filter=${filter || 'all'}&p=${current_page + 1 > pages ? pages : current_page + 1}`) &raquo;
+            
