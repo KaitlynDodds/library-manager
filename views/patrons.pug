@@ -4,6 +4,16 @@ block content
     h1= title
     p
         a.button(href='/patrons/new') Create New Patron
+
+    form(class='search' method='POST' action='/patrons/search')
+        p
+            input#title(type='text' name='search' placeholder='name, library id, etc.')
+            input(type='submit', value='Search')
+
+    if (patrons.length === 0) 
+        p
+            strong No Search Results
+
     table
         thead
             tr
