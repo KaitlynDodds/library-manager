@@ -37,6 +37,9 @@ router.get('/:id/detail', function(req, res, next) {
 			} else {
 				res.sendStatus(404);
 			}
+		})
+		.catch(err => {
+			res.sendStatus(500);
 		});
 });
 
@@ -73,6 +76,9 @@ router.put('/:id', function(req, res, next) {
             } else {
                 throw err;
             }
+		})
+		.catch(err => {
+			res.sendStatus(500);
 		});
 });
 
@@ -102,6 +108,9 @@ router.post('/', function(req, res, next) {
             } else {
                 throw err;
             }
+		})
+		.catch(err => {
+			res.sendStatus(500);
 		});
 });
 

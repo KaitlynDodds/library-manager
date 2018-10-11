@@ -120,6 +120,9 @@ router.get('/:loan_id/book/:book_id/return', function(req, res, next) {
 			} else {
 				res.sendStatus(404);
 			}
+		})
+		.catch(err => {
+			res.sendStatus(500);
 		});
 });
 
