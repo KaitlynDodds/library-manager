@@ -33,4 +33,18 @@ block content
                     td
                         if (!loan.returned_on)
                             a.button(href=`loans/${loan.id}/book/${loan.book_id}/return`) Return Book
+
+    if pages > 1
+        ul.pagination
+            if current_page > 1
+                li 
+                    a(href=`/loans?filter=${filter || 'all'}&p=${current_page - 1 < 1 ? 1 : current_page - 1}`) &laquo;
+            - let n = 1
+            while n <= pages
+                li 
+                    a(href=`/loans?filter=${filter || 'all'}&p=${n}` class=n === current_page ? "active" : "") #{n}
+                    - n++
+            if current_page < pages
+                li 
+                    a(href=`/loans?filter=${filter || 'all'}&p=${current_page + 1 > pages ? pages : current_page + 1}`) &raquo;
             

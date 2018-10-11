@@ -13,20 +13,31 @@ const Query 	= require('../queries/loans');
 
 /* GET All LOANS page. */
 router.get('/', function(req, res, next) {
+	const LIMIT = 10;
+	
+	// 'all', 'overdue', 'checked_out'
 	const filter = req.query.filter;
+	// page to display
+    const p = parseInt(req.query.p || 1);
+
+    // calc offset based on page
+    const offset = (p - 1 > 0 ? p - 1 : 0) * 10;
+
 	// default query 
-	let query = Query.selectAllLoans;
+	let query = Query.selectAllLoans(offset, LIMIT);
 	if (filter === 'overdue') {
-		query = Query.selectOverdueLoans;
+		query = Query.selectOverdueLoans(offset, LIMIT);
 	} else if (filter === 'checked_out') {
-		query = Query.selectCheckedOutLoans;
+		query = Query.selectCheckedOutLoans(offset, LIMIT);
 	}
 	
-	Loan.findAll(query)
-		.then((loans) => {
-			if (loans) {
+	Loan.findAndCountAll(query)
+		.then((results) => {
+			if (results) {
 				res.render('loans', { 
-					loans, 
+					current_page: p,
+                    pages: Math.ceil(results.count / LIMIT),
+					loans: results.rows, 
 					title: 'Loans', 
 					filter: filter 
 				});

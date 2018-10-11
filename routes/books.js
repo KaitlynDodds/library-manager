@@ -12,21 +12,21 @@ const Query = require('../queries/books');
 
 /* GET All BOOKS page. */
 router.get('/', function(req, res, next) {
+    const LIMIT = 10;
     // 'all', 'overdue', 'checked_out'
     const filter = req.query.filter;
     // page to display
     const p = parseInt(req.query.p || 1);
     // calc offset based on page
     const offset = (p - 1 > 0 ? p - 1 : 0) * 10
-    const limit = 10;
 
     // default query (get all books)
-    let query = { offset: offset, limit: 10 };
+    let query = { offset: offset, limit: LIMIT };
 
     if (filter === 'checked_out') {
-        query = Query.selectCheckedOutBooks(offset, limit);
+        query = Query.selectCheckedOutBooks(offset, LIMIT);
     } else if (filter === 'overdue') {
-        query = Query.selectOverdueBooks(offset, limit);
+        query = Query.selectOverdueBooks(offset, LIMIT);
     }   
 
     Book.findAndCountAll(query)
@@ -35,7 +35,7 @@ router.get('/', function(req, res, next) {
                 res.render('books', { 
                     current_page: p,
                     books: results.rows, 
-                    pages: Math.ceil(results.count / limit),
+                    pages: Math.ceil(results.count / LIMIT),
                     title: 'Books', 
                     filter: filter 
                 });
