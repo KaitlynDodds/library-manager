@@ -132,3 +132,25 @@ a.active {
 .pagination li a:hover {
   color: #000;
 }
+
+.search {
+  width: 785px;
+}
+
+.search input {
+  margin: 0;
+}
+
+.search input[type='text'] {
+  width: 80%;
+  border: solid 1px #019875;
+  border-top-right-radius: 0px;
+  border-bottom-right-radius: 0px;
+}
+
+.search input[type='submit'] {
+  width: 15%;
+  padding: 11px;
+  border-top-left-radius: 0px;
+  border-bottom-left-radius: 0px;
+}

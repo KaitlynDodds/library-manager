@@ -143,4 +143,33 @@ router.post('/', function(req, res, next) {
 		});
 });
 
+/* POST Get book search results */
+router.post('/search', function(req, res, next) {
+    const LIMIT = 10;
+    const search = req.body.search;
+    // page to display
+    const p = parseInt(req.query.p || 1);
+    // calc offset based on page
+    const offset = (p - 1 > 0 ? p - 1 : 0) * 10
+
+    const query = Query.findSearchResults(search, LIMIT, offset);
+
+    Book.findAndCountAll(query)
+        .then(results => {
+            if (results || results.count > 0) {
+                res.render('books', { 
+                    current_page: p,
+                    books: results.rows, 
+                    pages: Math.ceil(results.count / LIMIT),
+                    title: `Books: ${search}`
+                });
+            } else {
+                res.sendStatus(404);
+            }
+        })
+        .catch(err => {
+			res.sendStatus(500);
+		});
+});
+
 module.exports = router;

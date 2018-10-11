@@ -95,8 +95,40 @@ selectBookById = function(given_id) {
     };
 }
 
+findSearchResults = function(search, limit, offset) {
+    return {
+        offset: offset, 
+        limit: limit,
+        where: { 
+            [Op.or]: [
+                {   // title LIKE search
+                    title: {            
+                        [Op.like]: `%${search}%`
+                    }
+                },
+                {   // author LIKE search
+                    author: {           
+                        [Op.like]: `%${search}%`
+                    }
+                },
+                {   // genre LIKE search
+                    genre: {            
+                        [Op.like]: `%${search}%`
+                    }
+                },
+                {   // first_published LIKE search
+                    first_published: {  
+                        [Op.like]: `%${search}%`
+                    }
+                }
+            ]
+        },
+    }
+}
+
 module.exports = {
     selectCheckedOutBooks: selectCheckedOutBooks,
     selectOverdueBooks: selectOverdueBooks,
-    selectBookById: selectBookById
+    selectBookById: selectBookById,
+    findSearchResults: findSearchResults
 };
