@@ -91,6 +91,7 @@ selectCheckedOutLoans = function(offset, limit) {
     }
 }
 
+/* Get all Book and Patron info for loan */
 selectLoanById = function(loan_id) {
     return {
         where: {
