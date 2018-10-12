@@ -8,9 +8,11 @@ const Loan = require('../models').Loan;
 // queries 
 const Query = require('../queries/books');
 
+// number of books to return 
+const LIMIT = 10;
+
 /* GET All BOOKS page. */
 router.get('/', function(req, res, next) {
-    const LIMIT = 10;
     // 'all', 'overdue', 'checked_out'
     const filter = req.query.filter;
     // page to display
@@ -48,8 +50,7 @@ router.get('/', function(req, res, next) {
 
 /* GET Book Detail page (form) */
 router.get('/:id/detail', function(req, res, next) {
-    let book_id = req.params.id; 
-    let query = Query.selectBookById(book_id);
+    let query = Query.selectBookById(req.params.id);
 
     Book.findOne(query)
         .then(book => {
@@ -70,7 +71,7 @@ router.get('/:id/detail', function(req, res, next) {
 
 /* PUT Edit Book */
 router.put('/:id', function(req, res, next) {
-
+    // update book in db
     Book.findById(req.params.id)
         .then(book => {
             if (book) {
@@ -83,6 +84,7 @@ router.put('/:id', function(req, res, next) {
             res.redirect('/books');
         })
         .catch(err => {
+            /* Unable to update book, rebuild detail page with user input & errors */
             if(err.name === "SequelizeValidationError") {
                 let query = Query.selectBookById(req.params.id);
 
@@ -126,9 +128,10 @@ router.post('/', function(req, res, next) {
             }
         })
         .catch(err => {
+            /* Unable to create book, rebuild new book page with user input & errors */
             if(err.name === "SequelizeValidationError") {
                 res.render("book/new", {
-                    book: Book.build(req.body), 
+                    book: Book.build(req.body),  // rebuild with user input 
                     title: "New Book", 
                     errors: err.errors
                 });
@@ -143,7 +146,6 @@ router.post('/', function(req, res, next) {
 
 /* POST Get book search results */
 router.post('/search', function(req, res, next) {
-    const LIMIT = 10;
     const search = req.body.search;
     // page to display
     const p = parseInt(req.query.p || 1);
@@ -154,7 +156,7 @@ router.post('/search', function(req, res, next) {
 
     Book.findAndCountAll(query)
         .then(results => {
-            if (results || results.count > 0) {
+            if (results) {
                 res.render('book/books', { 
                     current_page: p,
                     books: results.rows, 
