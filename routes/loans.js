@@ -9,20 +9,21 @@ const Patron 	= require('../models').Patron;
 // Queries
 const Query 	= require('../queries/loans');
 
+// how many loans to return on search
+const LIMIT = 10;
+
 /* GET All LOANS page. */
 router.get('/', function(req, res, next) {
-	const LIMIT = 10;
-	
 	// 'all', 'overdue', 'checked_out'
 	const filter = req.query.filter;
 	// page to display
     const p = parseInt(req.query.p || 1);
-
     // calc offset based on page
     const offset = (p - 1 > 0 ? p - 1 : 0) * 10;
 
-	// default query 
+	// default query (get all loans)
 	let query = Query.selectAllLoans(offset, LIMIT);
+
 	if (filter === 'overdue') {
 		query = Query.selectOverdueLoans(offset, LIMIT);
 	} else if (filter === 'checked_out') {
@@ -52,6 +53,7 @@ router.get('/new', function(req, res, next) {
 	let return_by = new Date();
 	return_by.setDate(return_by.getDate() + 7); // get date 7 days from today
 
+	// store data for books and patrons 
 	const data = {};
 
 	Book.findAll()
@@ -86,6 +88,7 @@ router.post('/', function(req, res, next) {
             }
 		})
 		.catch(err => {
+			/* Unable to create loan, recreate new loan form with user input */
 			if(err.name === "SequelizeValidationError") {
 				data = {};
 				Book.findAll()
@@ -121,7 +124,7 @@ router.get('/:loan_id/book/:book_id/return', function(req, res, next) {
 			if (loan) {
 				res.render('loan/return', { 
 					loan: loan,
-					r_loan: Loan.build({
+					r_loan: Loan.build({		// loan object with todays date 
 						returned_on: new Date()
 					}),
 					title: 'Patron: Return Book' 
@@ -170,6 +173,7 @@ router.put('/:loan_id/return', function(req, res, next) {
 				res.redirect(`/loans`);
 			})
 			.catch(err => {
+				/* Unable to update loan, rebuild return page with user input & errors */
 				if(err.name === "SequelizeValidationError") {
 					Loan.findOne(query)
 						.then(loan => {
