@@ -36,7 +36,10 @@ module.exports = (sequelize, DataTypes) => {
 			validate: {           
 				notEmpty: {   // don't allow empty strings
 					msg: "Email is required"
-				},           
+				}, 
+				isEmail: {
+					msg: "Please provide valid email"
+				}          
 			}
 		},
 		library_id: {

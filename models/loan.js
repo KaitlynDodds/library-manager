@@ -44,8 +44,21 @@ module.exports = (sequelize, DataTypes) => {
 			allowNull: true,
 			defaultValue: null,
 		},
-	}, {
-		timestamps: false
+	}, 
+	{
+        timestamps: false,
+        validate: {
+            returnByIsAfterLoanedOn: function() {
+                if (this.loaned_on >= this.return_by) {
+                    throw new Error('Return by must be after date loaned on');
+                }
+            },
+            returnedOnIsAfterLoanedOn: function() {
+                if (this.returned_on < this.loaned_on) {
+                    throw new Error('Returned on must be after or equal to date loaned on');
+                }
+            }
+        }
 	});
 
 	Loan.associate = function(models) {
