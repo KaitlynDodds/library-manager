@@ -34,7 +34,7 @@ router.get('/', function(req, res, next) {
 	Loan.findAndCountAll(query)
 		.then((results) => {
 			if (results) {
-				res.render('loans', { 
+				res.render('loan/loans', { 
 					current_page: p,
                     pages: Math.ceil(results.count / LIMIT),
 					loans: results.rows, 
@@ -63,7 +63,7 @@ router.get('/new', function(req, res, next) {
 		})
 		.then(patrons => {
 			data.patrons = patrons;
-			res.render('loan_new', {
+			res.render('loan/new', {
 				data: data,
 				loan: Loan.build({
 					loaned_on: loaned_on, 
@@ -97,7 +97,7 @@ router.post('/', function(req, res, next) {
 					})
 					.then(patrons => {
 						data.patrons = patrons;
-						res.render("loan_new", {
+						res.render("loan/new", {
 							loan: Loan.build(req.body),
 							data: data,
 							title: "New Loan", 
@@ -121,7 +121,7 @@ router.get('/:loan_id/book/:book_id/return', function(req, res, next) {
 	Loan.findOne(query)
 		.then(loan => {
 			if (loan) {
-				res.render('book_return', { 
+				res.render('loan/return', { 
 					loan: loan,
 					r_loan: Loan.build({
 						returned_on: new Date()
@@ -146,7 +146,7 @@ router.put('/:loan_id/return', function(req, res, next) {
 			// if not, reload book_return with errors
 			Loan.findOne(query)
 				.then(loan => {
-					res.render('book_return', { 
+					res.render('loan/return', { 
 						loan: loan,
 						r_loan: Loan.build({
 							returned_on: new Date()
@@ -175,7 +175,7 @@ router.put('/:loan_id/return', function(req, res, next) {
 				if(err.name === "SequelizeValidationError") {
 					Loan.findOne(query)
 						.then(loan => {
-							res.render('book_return', { 
+							res.render('loan/return', { 
 								loan: loan,
 								r_loan: Loan.build({
 									returned_on: new Date()
