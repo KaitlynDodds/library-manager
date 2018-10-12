@@ -12,6 +12,7 @@ const LIMIT = 10;
 
 /* GET All PATRONS page. */
 router.get('/', function(req, res, next) {
+	const filter = req.params.filter || 'all';
 	// page to display
     const p = parseInt(req.query.p || 1);
     // calc offset based on page
@@ -24,7 +25,8 @@ router.get('/', function(req, res, next) {
 					current_page: p,
                     patrons: results.rows, 
                     pages: Math.ceil(results.count / LIMIT),
-					title: 'Patrons'
+					title: 'Patrons',
+					filter: filter
 				});
 			} else {
 				res.send(404);
@@ -130,12 +132,11 @@ router.post('/', function(req, res, next) {
 /* POST Get patron search results */
 router.post('/search', function(req, res, next) {
 	const search = req.body.search;
-	
     // page to display
     const p = parseInt(req.query.p || 1);
     // calc offset based on page
-    const offset = (p - 1 > 0 ? p - 1 : 0) * 10
-
+	const offset = (p - 1 > 0 ? p - 1 : 0) * 10
+	
     const query = Query.findSearchResults(search, LIMIT, offset);
 
     Patron.findAndCountAll(query)

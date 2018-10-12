@@ -4,6 +4,10 @@ block content
     h1= title
     p
         a.button(href='/patrons/new') Create New Patron
+    p
+        | Filters 
+
+        a(href='/patrons?filter=all&p=1' class=filter === 'all' ? "active" : "") All
 
     form(class='search' method='POST' action='/patrons/search')
         p
