@@ -18,7 +18,7 @@ router.get('/', function(req, res, next) {
 	Patron.findAndCountAll({ limit: LIMIT, offset: offset })
 		.then((results) => {
 			if (results) {
-				res.render('patrons', { 
+				res.render('patron/patrons', { 
 					current_page: p,
                     patrons: results.rows, 
                     pages: Math.ceil(results.count / LIMIT),
@@ -38,7 +38,7 @@ router.get('/:id/detail', function(req, res, next) {
 	Patron.findOne(query)
 		.then(patron => {
 			if (patron) {
-				res.render('patron_detail', { 
+				res.render('patron/detail', { 
 					patron,
 					title: `Patron: ${patron.getFullname()}`
 				});
@@ -71,7 +71,7 @@ router.put('/:id', function(req, res, next) {
 				Patron.findOne(query)
                     .then(patron => {
                         if (patron) {
-                            res.render("patron_detail", {
+                            res.render("patron/detail", {
                                 // keeps changes made to fields by user
                                 patron: Object.assign(patron, req.body), 
                                 title: `Patron: ${patron.getFullname()}`, 
@@ -92,7 +92,7 @@ router.put('/:id', function(req, res, next) {
 
 /* GET New Patron page (form) */
 router.get('/new', function(req, res, next) {
-	res.render('patron_new', { patron: Patron.build(), title: 'New Patron' });
+	res.render('patron/new', { patron: Patron.build(), title: 'New Patron' });
 });
 
 /* POST Create New Patron */
@@ -108,7 +108,7 @@ router.post('/', function(req, res, next) {
 		})
 		.catch(err => {
 			if(err.name === "SequelizeValidationError") {
-                res.render("patron_new", {
+                res.render("patron/new", {
 					patron: Patron.build(req.body), 
 					title: "New Patron", 
 					errors: err.errors
@@ -136,7 +136,7 @@ router.post('/search', function(req, res, next) {
     Patron.findAndCountAll(query)
         .then(results => {
             if (results || results.count > 0) {
-                res.render('patrons', { 
+                res.render('patron/patrons', { 
                     current_page: p,
                     patrons: results.rows, 
                     pages: Math.ceil(results.count / LIMIT),
