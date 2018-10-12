@@ -33,15 +33,7 @@ module.exports = (sequelize, DataTypes) => {
 		},
 		first_published: { 
 			type: DataTypes.INTEGER,
-			validate: {           
-				notEmpty: {   // don't allow empty strings
-					msg: "Year published is required"
-				},       
-				len: {
-					args: [4],
-					msg: "Year published must be 4 digits"
-				}    
-			}
+			allowNull: true,
 		}
 	}, {
 		timestamps: false

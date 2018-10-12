@@ -107,7 +107,7 @@ router.post('/', function(req, res, next) {
 	Patron.create(req.body)
 		.then(patron => {
 			if (patron) {
-				res.redirect(`/patrons/${patron.id}/detail`);
+				res.redirect(`/patrons`);
 			} else {
 				res.sendStatus(500);
 			}
@@ -131,7 +131,7 @@ router.post('/', function(req, res, next) {
 
 /* POST Get patron search results */
 router.post('/search', function(req, res, next) {
-	const search = req.body.search;
+	const search = req.body.search.trim();
     // page to display
     const p = parseInt(req.query.p || 1);
     // calc offset based on page
