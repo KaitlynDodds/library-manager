@@ -7,9 +7,11 @@ const Patron        = require('../models').Patron;
 // queries
 const Query 		= require('../queries/patrons');
 
+// how many patrons should be returned from search 
+const LIMIT = 10;
+
 /* GET All PATRONS page. */
 router.get('/', function(req, res, next) {
-	const LIMIT = 10;
 	// page to display
     const p = parseInt(req.query.p || 1);
     // calc offset based on page
@@ -66,8 +68,10 @@ router.put('/:id', function(req, res, next) {
 			res.redirect('/patrons');
 		})
 		.catch(err => {
+			/* Unable to update, rerender detail page with errors & user provided values */ 
 			if(err.name === "SequelizeValidationError") {
-                let query = Query.selectPatronById(req.params.id);
+				let query = Query.selectPatronById(req.params.id);
+				
 				Patron.findOne(query)
                     .then(patron => {
                         if (patron) {
@@ -107,6 +111,7 @@ router.post('/', function(req, res, next) {
 			}
 		})
 		.catch(err => {
+			/* Unable to create new patron, rerender new patron form with errors & user provided values */
 			if(err.name === "SequelizeValidationError") {
                 res.render("patron/new", {
 					patron: Patron.build(req.body), 
@@ -124,8 +129,8 @@ router.post('/', function(req, res, next) {
 
 /* POST Get patron search results */
 router.post('/search', function(req, res, next) {
-    const LIMIT = 10;
-    const search = req.body.search;
+	const search = req.body.search;
+	
     // page to display
     const p = parseInt(req.query.p || 1);
     // calc offset based on page
@@ -135,7 +140,7 @@ router.post('/search', function(req, res, next) {
 
     Patron.findAndCountAll(query)
         .then(results => {
-            if (results || results.count > 0) {
+            if (results) {
                 res.render('patron/patrons', { 
                     current_page: p,
                     patrons: results.rows, 
