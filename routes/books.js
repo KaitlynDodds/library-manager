@@ -32,7 +32,7 @@ router.get('/', function(req, res, next) {
     Book.findAndCountAll(query)
         .then((results) => {
             if (results.rows) {
-                res.render('books', { 
+                res.render('book/books', { 
                     current_page: p,
                     books: results.rows, 
                     pages: Math.ceil(results.count / LIMIT),
@@ -56,7 +56,7 @@ router.get('/:id/detail', function(req, res, next) {
     Book.findOne(query)
         .then(book => {
             if (book) {
-                res.render('book_detail', { 
+                res.render('book/detail', { 
                     book,
                     loans: book.Loans,
                     title: 'Book Detail Page' 
@@ -91,7 +91,7 @@ router.put('/:id', function(req, res, next) {
                 Book.findOne(query)
                     .then(book => {
                         if (book) {
-                            res.render("book_detail", {
+                            res.render("book/detail", {
                                 // keeps changes made to fields by user
                                 book: Object.assign(book, req.body), 
                                 loans: book.Loans,
@@ -113,7 +113,7 @@ router.put('/:id', function(req, res, next) {
   
 /* GET New Book page (form) */
 router.get('/new', function(req, res, next) {
-    res.render('book_new', { book: Book.build(), title: 'New Book' });
+    res.render('book/new', { book: Book.build(), title: 'New Book' });
 });
 
 /* POST Create New Book */
@@ -129,7 +129,7 @@ router.post('/', function(req, res, next) {
         })
         .catch(err => {
             if(err.name === "SequelizeValidationError") {
-                res.render("book_new", {
+                res.render("book/new", {
                     book: Book.build(req.body), 
                     title: "New Book", 
                     errors: err.errors
@@ -157,7 +157,7 @@ router.post('/search', function(req, res, next) {
     Book.findAndCountAll(query)
         .then(results => {
             if (results || results.count > 0) {
-                res.render('books', { 
+                res.render('book/books', { 
                     current_page: p,
                     books: results.rows, 
                     pages: Math.ceil(results.count / LIMIT),

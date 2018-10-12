@@ -1,9 +1,9 @@
-extends layout.pug
+extends ../layout.pug
 
 block content 
     h1 Book: #{book.title}
 
-    include partials/errors.pug
+    include ../partials/errors.pug
 
     form(action=`/books/${book.id}?_method=PUT` method='POST')
         p
